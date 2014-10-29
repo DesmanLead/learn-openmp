@@ -1,2 +1,2 @@
 
-void printMatrix(long size, long matrix[][4]);
+void printMatrix(long size, long** matrix);

@@ -20,7 +20,10 @@ void matrixSum() {
             {  1, -1, 1, -1 }
     };
 
-    long result[size][size];
+    long** result = new long*[size];
+    for (int i = 0; i < size; i++) {
+        result[i] = new long[size];
+    }
 
 #pragma omp parallel
     {
