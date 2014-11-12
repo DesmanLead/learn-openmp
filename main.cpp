@@ -102,19 +102,22 @@ void matrixSumParallel() {
     delete [] result;
 }
 
-void calcPiParallel() {
-    const long num_steps = 10000000;
+double calcPiParallel() {
+    const long n = 10000000;
 
     int i;
-    double x, pi, sum = 0.0;
-    double step = 1.0 / (double) num_steps;
-#pragma omp parallel for private(x) reduction(+:sum)
-    for (i = 0; i < num_steps; i++) {
-        x = (i + 0.5) * step;
-        sum = sum + 4.0 / (1.0 + x * x);
+    double x, sum = 0.0;
+    double h = 1.0 / (double) n;
+#pragma omp parallel default(none) private(i,x) shared(h) reduction(+:sum)
+    {
+        #pragma omp for schedule (auto)
+        for (i = 0; i < n; ++i) {
+//            printf("i: %d, thread: %d\n", i, omp_get_thread_num());
+            x = (i + 0.5) * h;
+            sum = sum + 4.0 / (1.0 + x * x);
+        }
     }
-    pi = step * sum;
-    printf("%1.8f\n", pi);
+    return h * sum;
 }
 
 void calcPi() {
@@ -146,14 +149,26 @@ void check() {
 }
 
 int main() {
-    double t_start = omp_get_wtime();
-    matrixSum();
-    double t_end = omp_get_wtime();
-    printf("1 thread: %f\n", t_end - t_start);
+    double t_start;
+    double t_end;
+    double avg_time = 0;
+    const int STEPS = 1000;
 
-    t_start = omp_get_wtime();
-    matrixSumParallel();
-    t_end = omp_get_wtime();
-    printf("multi-thread: %f\n", t_end - t_start);
+    // Ensure there is no optimizations
+    double sum = 0;
+    double pi;
+
+    for (int i = 0; i < STEPS; ++i) {
+        t_start = omp_get_wtime();
+        pi = calcPiParallel();
+        t_end = omp_get_wtime();
+        avg_time += t_end - t_start;
+        sum += pi;
+    }
+    avg_time /= STEPS;
+    sum /= STEPS;
+    printf("avg time: %f\n", avg_time);
+    printf("pi: %f\n", sum);
+
     return 0;
 }
