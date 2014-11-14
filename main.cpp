@@ -1,6 +1,7 @@
 #include <iostream>
+#include "math.h"
+#include "simpson.h"
 #include "utils.h"
-#include "omp.h"
 
 using namespace std;
 
@@ -134,41 +135,20 @@ void calcPi() {
     printf("%1.8f\n", pi);
 }
 
-void check() {
-    const long num_steps = 10000000;
+double func(double x) {
+    return x * sin(x) * cos(x);
+}
 
-    int i;
-    double x, sum = 0.0;
-    double step = 1.0 / (double) num_steps;
-    for (i = 0; i < num_steps; i++) {
-        x = (i + 0.5) * step;
-        sum = sum + x;
-    }
+double testSimpson() {
+    return simpson(&func, 0, 1);
+}
 
-    printf("check: %f\n", step * sum);
+double testParallelSimpson() {
+    return simpsonParallel(&func, 0, 1);
 }
 
 int main() {
-    double t_start;
-    double t_end;
-    double avg_time = 0;
-    const int STEPS = 1000;
-
-    // Ensure there is no optimizations
-    double sum = 0;
-    double pi;
-
-    for (int i = 0; i < STEPS; ++i) {
-        t_start = omp_get_wtime();
-        pi = calcPiParallel();
-        t_end = omp_get_wtime();
-        avg_time += t_end - t_start;
-        sum += pi;
-    }
-    avg_time /= STEPS;
-    sum /= STEPS;
-    printf("avg time: %f\n", avg_time);
-    printf("pi: %f\n", sum);
-
+    measure(&testSimpson);
+    measure(&testParallelSimpson);
     return 0;
 }
