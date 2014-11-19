@@ -2,10 +2,10 @@
 #include <iostream>
 #include <omp.h>
 
-void printMatrix(long size, long** matrix) {
+void printMatrix(long size, double** matrix) {
     for (size_t i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
-            printf("%li ", matrix[i][j]);
+            printf("%f ", matrix[i][j]);
         }
         printf("\n");
     }
@@ -31,4 +31,32 @@ void measure(double (*f)()) {
     sum /= MEASURE_STEPS;
     printf("avg time: %f\n", avg_time);
     printf("avg value: %f\n", sum);
+}
+
+double** generateDiagonallyDominantMatrix(long size) {
+    if (size == 0) {
+        return nullptr;
+    }
+
+    double** matrix = new double*[size];
+    for (int i = 0; i < size; ++i) {
+        matrix[i] = new double[size];
+    }
+
+    if (size == 1) {
+        matrix[0][0] = 1;
+        return matrix;
+    }
+
+    matrix[0][0] = 10;
+    matrix[0][1] = 5;
+    for (int i = 1; i < size - 1; ++i) {
+        matrix[i][i - 1] = (double) i / 3.0;
+        matrix[i][i]     = (double) i;
+        matrix[i][i + 1] = (double) i / 3.0;
+    }
+    matrix[size - 1][size - 2] = 5;
+    matrix[size - 1][size - 1] = 10;
+
+    return matrix;
 }

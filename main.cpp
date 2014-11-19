@@ -148,7 +148,7 @@ double testParallelSimpson() {
 }
 
 int main() {
-    measure(&testSimpson);
-    measure(&testParallelSimpson);
+    double** matrix = generateDiagonallyDominantMatrix(4);
+    printMatrix(4, matrix);
     return 0;
 }
