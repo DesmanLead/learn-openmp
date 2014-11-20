@@ -11,6 +11,13 @@ void printMatrix(long size, double** matrix) {
     }
 }
 
+void printVector(long size, double* vector) {
+    for (size_t i = 0; i < size; ++i) {
+        printf("%f ", vector[i]);
+    }
+    printf("\n");
+}
+
 void measure(double (*f)()) {
     double t_start;
     double t_end;
@@ -59,4 +66,18 @@ double** generateDiagonallyDominantMatrix(long size) {
     matrix[size - 1][size - 1] = 10;
 
     return matrix;
+}
+
+double* generateVector(long size) {
+    if (size == 0) {
+        return nullptr;
+    }
+
+    double* vector = new double[size];
+
+    for (long i = 0; i < size; ++i) {
+        vector[i] = 15.0;
+    }
+
+    return vector;
 }

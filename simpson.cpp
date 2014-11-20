@@ -1,4 +1,5 @@
 #include "simpson.h"
+#include "math.h"
 
 double simpson(double (*f)(double), double a, double b) {
     // N must be even
@@ -56,4 +57,16 @@ double simpsonParallel(double (*f)(double), double a, double b) {
 
     result = result * (sum1 + sum2);
     return result;
+}
+
+double func(double x) {
+    return x * sin(x) * cos(x);
+}
+
+double testSimpson() {
+    return simpson(&func, 0, 1);
+}
+
+double testParallelSimpson() {
+    return simpsonParallel(&func, 0, 1);
 }

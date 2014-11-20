@@ -8,7 +8,13 @@ set(SOURCE_FILES
     main.cpp
     utils.h
     utils.cpp
+    pi.h
+    pi.cpp
+    matrix_sum.h
+    matrix_sum.cpp
     simpson.h
     simpson.cpp
+    linear.h
+    linear.cpp
 )
 add_executable(mplearn ${SOURCE_FILES})
